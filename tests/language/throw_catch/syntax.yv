@@ -1,0 +1,17 @@
+function div(a, b) {
+  if (b == 0) throw "div by zero";
+  return a / b;
+}
+
+var (
+  result = 0;
+  catched = 1;
+)
+
+var r = catch div(4, 2);
+print(r[result]); # out: 2
+print(r[catched]); # out: void
+
+r = catch div(4, 0);
+print(r[result]); # out: void
+print(r[catched]); # out: div by zero

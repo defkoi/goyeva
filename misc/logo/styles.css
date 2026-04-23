@@ -1,0 +1,40 @@
+body {
+  background-color: black;
+
+  width: 100vw;
+  height: 100vh;
+
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+.back {
+  background-color: #7058be;
+
+  width: 400px;
+  height: 400px;
+
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
+.text {
+  color: white;
+
+  width: 320px;
+  height: 320px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: Cambria;
+  font-size: 256px;
+}

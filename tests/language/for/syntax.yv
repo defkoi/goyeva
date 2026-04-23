@@ -1,0 +1,8 @@
+var count = 3;
+for (var i = 0; i < count; i++) {
+  print(i);
+}
+
+# out: 0
+# out: 1
+# out: 2

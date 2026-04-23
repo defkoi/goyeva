@@ -1,0 +1,2 @@
+function r => r();
+r(); # err: runtime error: stack overflow

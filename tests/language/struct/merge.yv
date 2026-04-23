@@ -1,0 +1,18 @@
+struct Object {
+  .name = "object",
+  ->hello() => print(self.name),
+};
+
+struct Object2 {
+  .name = "object2",
+  Object...,
+};
+Object2->hello(); # out: object
+print(Object.hello == Object2.hello); # out: true
+
+struct Object3 {
+  Object...,
+  .name = "object3",
+};
+Object3->hello(); # out: object3
+print(Object.hello == Object3.hello); # out: true

@@ -1,0 +1,34 @@
+{
+  "name": "yeva",
+  "displayName": "Yeva",
+  "description": "Yeva language support for VS Code",
+  "icon": "images/logo.png",
+  "publisher": "defkoi",
+  "version": "0.0.0",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "yeva",
+        "aliases": [
+          "Yeva",
+          "yeva"
+        ],
+        "extensions": [
+          ".yv",
+          ".yeva"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "yeva",
+        "scopeName": "source.yeva",
+        "path": "./syntaxes/yeva.tmLanguage.json"
+      }
+    ]
+  }
+}

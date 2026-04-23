@@ -1,0 +1,13 @@
+if (void) print("bad");
+
+if (false) print("bad");
+if (true) print("good"); # out: good
+
+if (0) print("bad");
+if (1) print("good"); # out: good
+
+if ("") print("bad");
+if ("string") print("good"); # out: good
+
+if (struct {}) print("good"); # out: good
+if (function {}) print("good"); # out: good

@@ -1,0 +1,209 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "yeva",
+  "scopeName": "source.yeva",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#punctuation"
+    },
+    {
+      "include": "#functions"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.yeva",
+          "match": "#.*$"
+        },
+        {
+          "name": "comment.block.yeva",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.yeva",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "include": "#string_escapes"
+            }
+          ]
+        }
+      ]
+    },
+    "string_escapes": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.yeva",
+          "match": "\\\\(?:[abfnrtv\"\\\\])"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.yeva",
+          "match": "\\b\\d+(?:_\\d+)*(?:\\.\\d+(?:_\\d+)*)?\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "variable.language",
+          "match": "\\b(self)\\b"
+        },
+        {
+          "name": "keyword.control.yeva",
+          "match": "\\b(if|else|while|do|for|in|break|continue|return|yield|throw)\\b"
+        },
+        {
+          "name": "keyword.operator.yeva",
+          "match": "\\b(typeof|destruct|catch)\\b"
+        },
+        {
+          "name": "entity.name.type.yeva",
+          "match": "\\b(var|function|coroutine|struct)\\b"
+        },
+        {
+          "name": "constant.language.yeva",
+          "match": "\\b(false|true|void)\\b"
+        },
+        {
+          "name": "entity.name.function.yeva",
+          "match": "(?<=\\b(function|coroutine)\\s+)[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        },
+        {
+          "name": "entity.name.class.yeva",
+          "match": "(?<=\\bstruct\\s+)[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.arithmetic.compound.yeva",
+          "match": "\\+=|-=|\\*=|/=|%="
+        },
+        {
+          "name": "keyword.operator.arithmetic.yeva",
+          "match": "\\+|-(?!>)|\\*|/|%"
+        },
+        {
+          "name": "keyword.operator.logical.compound.yeva",
+          "match": "&&=|\\|\\|=|\\?\\?="
+        },
+        {
+          "name": "keyword.operator.logical.yeva",
+          "match": "&&|\\|\\||\\?\\?|!"
+        },
+        {
+          "name": "keyword.operator.bitwise.compound.yeva",
+          "match": "&=|\\|=|\\^="
+        },
+        {
+          "name": "keyword.operator.bitwise.yeva",
+          "match": "&|\\||\\^|~"
+        },
+        {
+          "name": "keyword.operator.arrow.yeva",
+          "match": "=>"
+        },
+        {
+          "name": "keyword.operator.comparison.yeva",
+          "match": "[=!<>]=|==|!=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.assignment.yeva",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.increment-decrement.yeva",
+          "match": "\\+\\+|\\-\\-"
+        },
+        {
+          "name": "keyword.operator.spread.yeva",
+          "match": "\\.\\.\\."
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.terminator.yeva",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.comma.yeva",
+          "match": ","
+        },
+        {
+          "name": "punctuation.accessor.yeva",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.arrow.yeva",
+          "match": "\\->"
+        },
+        {
+          "name": "punctuation.parenthesis.begin.yeva",
+          "match": "\\("
+        },
+        {
+          "name": "punctuation.parenthesis.end.yeva",
+          "match": "\\)"
+        },
+        {
+          "name": "punctuation.brace.begin.yeva",
+          "match": "\\{"
+        },
+        {
+          "name": "punctuation.brace.end.yeva",
+          "match": "\\}"
+        },
+        {
+          "name": "punctuation.squarebracket.begin.yeva",
+          "match": "\\["
+        },
+        {
+          "name": "punctuation.squarebracket.end.yeva",
+          "match": "\\]"
+        },
+        {
+          "name": "keyword.operator.ternary.yeva",
+          "match": "\\?|:"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "support.function.yeva",
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\s*(?=[(\\{]|=>)"
+        }
+      ]
+    }
+  }
+}

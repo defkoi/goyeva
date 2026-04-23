@@ -1,0 +1,10 @@
+var i0 = 0;
+function iter() {
+  return i0 < 3 ? struct { i0++, i0 } : void;
+}
+for (var destruct { count, next } in iter) {
+  print(count, next);
+}
+# out: 0 1
+# out: 1 2
+# out: 2 3

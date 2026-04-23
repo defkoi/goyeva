@@ -1,0 +1,8 @@
+var _i = 0;
+function iter => _i < 3 ? _i++ : void;
+var i;
+for (i in iter) print(i);
+# out: 0
+# out: 1
+# out: 2
+print(i); # out: 2

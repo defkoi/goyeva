@@ -1,0 +1,5 @@
+function add(a: 1, b: 2) => a + b;
+print(add()); # out: 3
+print(add(2)); # out: 4
+print(add(2, 3)); # out: 5
+print(add(void, 5)); # out: 6
