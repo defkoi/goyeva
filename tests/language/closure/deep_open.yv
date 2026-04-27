@@ -1,0 +1,6 @@
+var i = 0;
+var j;
+function f {
+  return function => i;
+}
+print(f()()); # out: 0

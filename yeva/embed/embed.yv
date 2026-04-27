@@ -1,0 +1,7 @@
+function assert(actual, expected, message) {
+  expected ??= true;
+  if (actual == expected) return;
+  throw message ?? "assertion failed";
+}
+
+return assert;

@@ -1,0 +1,37 @@
+function div(a, b) {
+  if !(b) throw "divizion by zero";
+  var c;
+  c = a / b;
+  return c;
+}
+
+struct logger {
+  ._prefix = "[06:21]",
+  ->log(obj) => log(self._prefix, obj),
+  .ho => print("ho"),
+};
+
+loop: for (var i = 0; i < 10; i++) {
+  logger->log(i);
+  if (i % 2) continue loop;
+}
+
+3.14 ? catch div(2, 0) : struct { 1, 2, 3, void };
+
+var add = function (a, b) => a + b;
+
+coroutine iter(end: 5) {
+  var i = 0;
+  do {
+    yield i++;
+  } while (i < end);
+}
+
+function hello {
+  var msg = "Hello,\n" +
+    "\tworld!";
+  msg += "\n";
+  print(msg);
+}
+
+argv ??= struct (logger) {};

@@ -1,0 +1,7 @@
+function add1(a, b) { return a + b; }
+function add2(a, b) => a + b;
+
+function main1() {}
+function main2() => void;
+function main3 {}
+function main4 => void;

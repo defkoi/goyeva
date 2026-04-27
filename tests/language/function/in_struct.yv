@@ -1,0 +1,9 @@
+var s = struct {
+  .add1(a, b) { return a + b; },
+  .add2(a, b) => a + b,
+
+  .main1() {},
+  .main2() => void,
+  .main3 {},
+  .main4 => void,
+};

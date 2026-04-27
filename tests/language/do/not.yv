@@ -1,0 +1,10 @@
+var count = 3;
+var i = 0;
+do {
+  print(i);
+  i++;
+} while !(i >= count);
+
+# out: 0
+# out: 1
+# out: 2

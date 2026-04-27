@@ -1,0 +1,16 @@
+# skip!
+var x = "first";
+var ff;
+function {
+  function f() {
+    print(x);
+  }
+  f(); # out: first
+  x = "second";
+  f(); # out: second
+  var x = "third";
+  f(); # out: third
+  ff = f;
+}();
+x = "bad";
+ff(); # out: third

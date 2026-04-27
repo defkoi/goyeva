@@ -1,0 +1,25 @@
+var a = struct { .len = 0 };
+var i;
+for (i = 0; i < 3; i++) {
+  a[a.len++] = function () => i;
+}
+print(a[0]()); # out: 3
+print(a[1]()); # out: 3
+print(a[2]()); # out: 3
+
+a = struct { .len = 0 };
+for (var i = 0; i < 3; i++) {
+  a[a.len++] = function () => i;
+}
+print(a[0]()); # out: 3
+print(a[1]()); # out: 3
+print(a[2]()); # out: 3
+
+a = struct { .len = 0 };
+for (var i = 0; i < 3; i++) {
+  var i = i;
+  a[a.len++] = function () => i;
+}
+print(a[0]()); # out: 0
+print(a[1]()); # out: 1
+print(a[2]()); # out: 2

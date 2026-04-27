@@ -1,0 +1,20 @@
+var a, b, c;
+
+a = struct {
+  [1] = struct {
+    [2] = 0,
+  },
+};
+b = 2;
+print(++a[--b][++b]); # out: 1
+print(b); # out: 2
+
+a = struct {
+  [1] = 0,
+};
+b = struct {
+  [3] = 2,
+};
+c = 2;
+print(++a[--b[++c]]); # out: 1
+print(c); # out: 3

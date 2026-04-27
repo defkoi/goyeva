@@ -1,0 +1,15 @@
+function destructure(
+  destruct {
+    .name,
+    .age: -1,
+  },
+  destruct {
+    .cmd,
+  }: struct {
+    .cmd = "go",
+  }
+) {
+  print(name, age, cmd);
+}
+destructure(struct { .name = "yeva" });
+# out: yeva -1 go

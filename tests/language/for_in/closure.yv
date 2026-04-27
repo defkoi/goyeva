@@ -1,0 +1,29 @@
+var i0 = 0;
+function iter => i0 < 3 ? i0++ : void;
+var a = struct { .len = 0 };
+var i;
+for (i in iter) {
+  a[a.len++] = function () => i;
+}
+print(a[0]()); # out: 2
+print(a[1]()); # out: 2
+print(a[2]()); # out: 2
+
+i0 = 0;
+a = struct { .len = 0 };
+for (var i in iter) {
+  a[a.len++] = function () => i;
+}
+print(a[0]()); # out: 0
+print(a[1]()); # out: 1
+print(a[2]()); # out: 2
+
+i0 = 0;
+a = struct { .len = 0 };
+for (var i in iter) {
+  var i = i;
+  a[a.len++] = function () => i;
+}
+print(a[0]()); # out: 0
+print(a[1]()); # out: 1
+print(a[2]()); # out: 2

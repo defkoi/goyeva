@@ -1,0 +1,4 @@
+var i = 0;
+var j;
+function f => i;
+print(f()); # out: 0

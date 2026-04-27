@@ -1,0 +1,8 @@
+var s1 = struct { 1, 2, 3, ["hello"] = "world" };
+var s2 = struct {};
+for (var p in pairs(s1))
+  s2[p.key] = p.value;
+print(s1[0] == s2[0]); # out: true
+print(s1[1] == s2[1]); # out: true
+print(s1[2] == s2[2]); # out: true
+print(s1["hello"] == s2["hello"]); # out: true

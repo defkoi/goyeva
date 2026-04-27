@@ -1,0 +1,13 @@
+# skip!
+function add1(a, b) => a + b
+function add2(a, b) { return a + b }
+function add3(a) { var b = 0; return a + b }
+function add4(a) {
+  var b = 0
+  return a + b
+}
+
+var s1 = struct { .a = 0 }
+var s2 = struct {
+  .a = 0
+}

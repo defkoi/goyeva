@@ -1,0 +1,15 @@
+|    name    | ext  |
+| :--------: | :--: |
+| WildScript | .ws  |
+|   Sigil    | .sil |
+|   Needle   | .ndl |
+|     Fy     | .fy  |
+|    Kai     | .kai |
+| Copperhead | .ch  |
+|    Eule    | .eul |
+|    Reya    | .ry  |
+|    Yeva    | .yv  |
+|    Iwa     | .iwa |
+|   Flover   | .flv |
+|   Sulfur   | .sf  |
+|    Koi     | .koi |
