@@ -37,6 +37,24 @@ const (
 	lx_minus_rangle lx_type = "->" // what about "::"?
 	lx_equal_rangle lx_type = "=>"
 
+	/* inline declarations and multiple assignments
+	 *
+	 * use ':=' for new variables
+	 * a := 1; b := 2;
+	 * b = (a := 1) + 1;
+	 * 'while' and 'do' statements always create an invisible block
+	 * like 'for' and 'if'
+	 *
+	 * change ',' behavior to support multiple assignment
+	 * a, b, z = (c, d := get());
+	 * z == void, a == c, b == d
+	 * but if 'a, b, z = (c, d := get()) + 1;' then a == c + 1, b == z == void
+	 * rules are very similar to lua,
+	 * but a muiltiple assignment may be inside an expression
+	 *
+	 * { .a, .b } := { .a = 1, .b = 2 };
+	 */
+
 	lx_plus        lx_type = "+"
 	lx_minus       lx_type = "-"
 	lx_star        lx_type = "*"
@@ -118,6 +136,26 @@ const (
 	lx_struct   lx_type = "struct"
 	lx_destruct lx_type = "destruct"
 
+	/* accessors
+	 *
+	 * structure data = map[Value](Accessor|Property)
+	 * Property = just Value
+	 * Accessor = { get: () -> Value, set: (Value) -> void }
+	 *
+	 * variable structure = { ->a => 1, ->a=(v) => ._a = v };
+	 *
+	 * variable a = structure->a;
+	 * variable new_a = structure->a = 2;
+	 * structure.a == { .get, .set }
+	 *
+	 * we can:
+	 * -- call_method ->() [structure property (structure)]
+	 * -- get -> [structure property get()]
+	 * -- set ->= [structure property set(value)]
+	 *
+	 * that means we need to remove method call chaining 'a->b->c();'
+	 */
+
 	/* alternative 'nokeyword' syntax
 	 *
 	 * variable structure = (Prototype) { elem, [key] = value };
@@ -130,6 +168,15 @@ const (
 	 * variable { elem, value = [key] } = structure;
 	 *
 	 * (Prototype) structure; <- set prototype nud
+	 */
+
+	/* array literal
+	 *
+	 * variable array = []{ 0, 1, 2, 3 };
+	 * typeof array == "structure" or "array"?
+	 * Array.isArray()?
+	 * can we place something between '[]'? length?
+	 * or better use '(Array){ 0, 1, 2, 3 };'?
 	 */
 
 	lx_line lx_type = "line"
