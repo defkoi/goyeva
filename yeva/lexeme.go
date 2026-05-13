@@ -154,6 +154,14 @@ const (
 	 * -- set ->= [structure property set(value)]
 	 *
 	 * that means we need to remove method call chaining 'a->b->c();'
+	 *
+	 * upd: what is difference between:
+	 * 1) variable property = structure->accessor;
+	 * property();
+	 * 2) structure->accessor();
+	 * -- ??? --
+	 * use '::' for method call?
+	 * structure::->accessor(); ?
 	 */
 
 	/* alternative 'nokeyword' syntax
@@ -168,13 +176,16 @@ const (
 	 * variable { elem, value = [key] } = structure;
 	 *
 	 * (Prototype) structure; <- set prototype nud
+	 *
+	 * upd: rename 'structure' to 'object' or 'table',
+	 * but better use 'object' for all heap-allocated values
 	 */
 
 	/* array literal
 	 *
 	 * variable array = []{ 0, 1, 2, 3 };
 	 * typeof array == "structure" or "array"?
-	 * Array.isArray()?
+	 * Array.isArray(array)?
 	 * can we place something between '[]'? length?
 	 * or better use '(Array){ 0, 1, 2, 3 };'?
 	 */
