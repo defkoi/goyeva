@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func native_print(e *engine, args []Value) (result Value, throw err_value) {
+func native_print(e *Engine, args []Value) (result Value, throw err_value) {
 	for i, arg := range args {
 		switch arg := arg.(type) {
 		case *Structure:
@@ -22,11 +22,11 @@ func native_print(e *engine, args []Value) (result Value, throw err_value) {
 	return Nihil{}, nil
 }
 
-func native_clock(e *engine, args []Value) (result Value, throw err_value) {
+func native_clock(e *Engine, args []Value) (result Value, throw err_value) {
 	return Number(float64(time.Now().UnixNano()) / float64(time.Second)), nil
 }
 
-func native_pairs(e *engine, args []Value) (result Value, throw err_value) {
+func native_pairs(e *Engine, args []Value) (result Value, throw err_value) {
 	const (
 		key_key   = String("key")
 		key_value = String("value")
@@ -35,16 +35,16 @@ func native_pairs(e *engine, args []Value) (result Value, throw err_value) {
 		return nil, String("structure expected")
 	}
 	s := args[0].(*Structure)
-	next, stop := iter.Pull2(s.pairs())
-	f := func(y *engine, args []Value) (result Value, throw err_value) {
+	next, stop := iter.Pull2(s.Pairs())
+	f := func(y *Engine, args []Value) (result Value, throw err_value) {
 		k, v, ok := next()
 		if !ok {
 			stop()
 			return Nihil{}, nil
 		}
-		r := new_structure(Nihil{})
-		r.store(key_key, k)
-		r.store(key_value, v)
+		r := NewStructure(Nihil{})
+		r.Store(key_key, k)
+		r.Store(key_value, v)
 		return r, nil
 	}
 	return &Native{f}, nil

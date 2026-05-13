@@ -14,7 +14,7 @@ type Value interface {
 	TypeOf() String
 }
 
-type err_value Value
+type err_value = Value
 
 type Nihil empty
 type Boolean bool
@@ -25,28 +25,28 @@ func Stringf(format string, a ...any) String {
 	return String(fmt.Sprintf(format, a...))
 }
 
-type struct_proto interface {
+type StructProto interface {
 	Value
-	load(key Value) Value
+	Load(key Value) Value
 }
 
-func (n Nihil) load(key Value) Value {
+func (n Nihil) Load(key Value) Value {
 	return Nihil{}
 }
 
 type Structure struct {
 	data  map[Value]Value
-	proto struct_proto
+	proto StructProto
 }
 
-func new_structure(proto struct_proto) *Structure {
+func NewStructure(proto StructProto) *Structure {
 	return &Structure{
 		data:  make(map[Value]Value, struct_cap),
 		proto: proto,
 	}
 }
 
-func (s *Structure) keys() iter.Seq[Value] {
+func (s *Structure) Keys() iter.Seq[Value] {
 	return func(yield func(Value) bool) {
 		for k := range s.data {
 			if !yield(k) {
@@ -56,7 +56,7 @@ func (s *Structure) keys() iter.Seq[Value] {
 	}
 }
 
-func (s *Structure) values() iter.Seq[Value] {
+func (s *Structure) Values() iter.Seq[Value] {
 	return func(yield func(Value) bool) {
 		for _, v := range s.data {
 			if !yield(v) {
@@ -66,7 +66,7 @@ func (s *Structure) values() iter.Seq[Value] {
 	}
 }
 
-func (s *Structure) pairs() iter.Seq2[Value, Value] {
+func (s *Structure) Pairs() iter.Seq2[Value, Value] {
 	return func(yield func(Value, Value) bool) {
 		for k, v := range s.data {
 			if !yield(k, v) {
@@ -76,13 +76,13 @@ func (s *Structure) pairs() iter.Seq2[Value, Value] {
 	}
 }
 
-func (s *Structure) size() int { return len(s.data) }
+func (s *Structure) Size() int { return len(s.data) }
 
-func (s *Structure) merge(v *Structure) {
+func (s *Structure) Merge(v *Structure) {
 	maps.Copy(s.data, v.data)
 }
 
-func (s *Structure) store(k Value, v Value) err_value {
+func (s *Structure) Store(k Value, v Value) err_value {
 	if is[Nihil](k) {
 		return Stringf("structure key is %s", nihil_literal)
 	}
@@ -94,11 +94,11 @@ func (s *Structure) store(k Value, v Value) err_value {
 	return nil
 }
 
-func (s *Structure) load(k Value) (v Value) {
+func (s *Structure) Load(k Value) (v Value) {
 	if v, ok := s.data[k]; ok {
 		return v
 	} else {
-		return s.proto.load(k)
+		return s.proto.Load(k)
 	}
 }
 
@@ -174,7 +174,7 @@ func (u *upvalue) close() {
 	u.up2 = nil
 }
 
-func (u *upvalue) store(e *engine, v Value) err_value {
+func (u *upvalue) store(e *Engine, v Value) err_value {
 	if !u.is_init {
 		switch up2 := u.up2.(type) {
 		case up2_open:
@@ -192,7 +192,7 @@ func (u *upvalue) store(e *engine, v Value) err_value {
 	return nil
 }
 
-func (u *upvalue) load(e *engine) (Value, err_value) {
+func (u *upvalue) load(e *Engine) (Value, err_value) {
 	if !u.is_init {
 		switch up2 := u.up2.(type) {
 		case up2_open:
@@ -209,9 +209,9 @@ func (u *upvalue) load(e *engine) (Value, err_value) {
 	}
 }
 
-type callable interface {
+type Callable interface {
 	Value
-	call(e *engine, argc int) err_value
+	call(e *Engine, argc int) err_value
 }
 
 type Closure struct {
@@ -219,7 +219,7 @@ type Closure struct {
 	upvals []*upvalue
 }
 
-func new_closure(def *definition, e *engine, fr *call_frame) *Closure {
+func new_closure(def *definition, e *Engine, fr *call_frame) *Closure {
 	cls := &Closure{def: def, upvals: make([]*upvalue, 0, len(def.upvals))}
 	for i, upv := range def.upvals {
 		if upv.is_local {
@@ -233,7 +233,7 @@ func new_closure(def *definition, e *engine, fr *call_frame) *Closure {
 	return cls
 }
 
-func (c *Closure) call(e *engine, argc int) err_value {
+func (c *Closure) call(e *Engine, argc int) err_value {
 	if len(e.call_stack) == cap(e.call_stack) {
 		panic(err_stack_overflow)
 	}
@@ -247,11 +247,17 @@ func (c *Closure) call(e *engine, argc int) err_value {
 	return nil
 }
 
+type NativeFunc = func(*Engine, []Value) (result Value, throw err_value)
+
 type Native struct {
-	fn func(*engine, []Value) (result Value, throw err_value)
+	fn NativeFunc
 }
 
-func (n *Native) call(e *engine, argc int) err_value {
+func NewNative(fn NativeFunc) *Native {
+	return &Native{fn: fn}
+}
+
+func (n *Native) call(e *Engine, argc int) err_value {
 	res, err := n.fn(e, e.stack[len(e.stack)-argc:])
 	if err != nil {
 		return err
@@ -287,7 +293,7 @@ func new_coroutine(cls *Closure) *Coroutine {
 	}
 }
 
-func (c *Coroutine) call(e *engine, argc int) err_value {
+func (c *Coroutine) call(e *Engine, argc int) err_value {
 	return Stringf("todo")
 }
 

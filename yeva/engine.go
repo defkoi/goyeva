@@ -56,7 +56,7 @@ type catch_handler struct {
 	call_stack_len int
 }
 
-type engine struct {
+type Engine struct {
 	globals        map[String]Value
 	call_stack     []call_frame
 	stack          []Value
@@ -66,7 +66,7 @@ type engine struct {
 	status         coros
 }
 
-func (e *engine) add_open_upval(abs_loc int) *upvalue {
+func (e *Engine) add_open_upval(abs_loc int) *upvalue {
 	var prev *linked_node[*upvalue] = nil
 	curr := e.open_upv
 	for curr != nil && curr.value.abs_loc > abs_loc {
@@ -89,7 +89,7 @@ func (e *engine) add_open_upval(abs_loc int) *upvalue {
 	return new_upvalue
 }
 
-func (e *engine) close_upvals(loc_of_last int) {
+func (e *Engine) close_upvals(loc_of_last int) {
 	var save *linked_node[*upvalue] = nil
 	var cur_save *linked_node[*upvalue] = save
 	for e.open_upv != nil && e.open_upv.value.abs_loc >= loc_of_last {
@@ -109,7 +109,7 @@ func (e *engine) close_upvals(loc_of_last int) {
 	}
 }
 
-func (e *engine) bind_upvalue2(upval *upvalue, info upval2_info) {
+func (e *Engine) bind_upvalue2(upval *upvalue, info upval2_info) {
 	switch info := info.(type) {
 	case upval2_name_info:
 		upval.up2 = up2(info)
@@ -126,19 +126,19 @@ func (e *engine) bind_upvalue2(upval *upvalue, info upval2_info) {
 	}
 }
 
-func (e *engine) call_value(callee Value, argc int) err_value {
+func (e *Engine) call_value(callee Value, argc int) err_value {
 	switch callee := callee.(type) {
-	case callable:
+	case Callable:
 		return callee.call(e, argc)
 	default:
 		return Stringf("attempt to call %s", callee.TypeOf())
 	}
 }
 
-func (e *engine) balance_args(argc int, paramc int, vararg bool) {
+func (e *Engine) balance_args(argc int, paramc int, vararg bool) {
 	var varg *Structure
 	if vararg {
-		varg = new_structure(Nihil{})
+		varg = NewStructure(Nihil{})
 	}
 	if argc <= paramc {
 		for range paramc - argc {
@@ -148,7 +148,7 @@ func (e *engine) balance_args(argc int, paramc int, vararg bool) {
 		shift := argc - paramc
 		if vararg {
 			for i := range shift {
-				varg.store(Number(shift-1-i), e.pop())
+				varg.Store(Number(shift-1-i), e.pop())
 			}
 		} else {
 			slice_cut(&e.stack, -shift)
@@ -159,15 +159,15 @@ func (e *engine) balance_args(argc int, paramc int, vararg bool) {
 	}
 }
 
-func (e *engine) store_local(cf *call_frame, idx int, v Value) {
+func (e *Engine) store_local(cf *call_frame, idx int, v Value) {
 	e.stack[cf.slots+idx] = v
 }
 
-func (e *engine) load_local(cf *call_frame, idx int) Value {
+func (e *Engine) load_local(cf *call_frame, idx int) Value {
 	return e.stack[cf.slots+idx]
 }
 
-func (e *engine) store_global(name String, v Value) err_value {
+func (e *Engine) store_global(name String, v Value) err_value {
 	// _, ok := e.globals[name]
 	// if !ok {
 	// 	return Stringf("variable '%s' is not defined", name)
@@ -176,7 +176,7 @@ func (e *engine) store_global(name String, v Value) err_value {
 	return nil
 }
 
-func (e *engine) load_global(name String) (Value, err_value) {
+func (e *Engine) load_global(name String) (Value, err_value) {
 	v, ok := e.globals[name]
 	if !ok {
 		return Nihil{}, nil
@@ -185,35 +185,35 @@ func (e *engine) load_global(name String) (Value, err_value) {
 	return v, nil
 }
 
-func (e *engine) push(v Value) {
+func (e *Engine) push(v Value) {
 	slice_push(&e.stack, v)
 }
 
-func (e *engine) pushf(format string, a ...any) {
+func (e *Engine) pushf(format string, a ...any) {
 	e.push(String(fmt.Sprintf(format, a...)))
 }
 
-func (e *engine) pop() (v Value) {
+func (e *Engine) pop() (v Value) {
 	return slice_pop(&e.stack)
 }
 
-func (e *engine) peek1() (v Value) {
+func (e *Engine) peek1() (v Value) {
 	return e.stack[len(e.stack)-1]
 }
 
-func (e *engine) peek2() (v Value) {
+func (e *Engine) peek2() (v Value) {
 	return e.stack[len(e.stack)-2]
 }
 
-func (e *engine) peek(i int) (v Value) {
+func (e *Engine) peek(i int) (v Value) {
 	return e.stack[len(e.stack)+i]
 }
 
-func (e *engine) current_frame() *call_frame {
+func (e *Engine) current_frame() *call_frame {
 	return slice_last(e.call_stack)
 }
 
-func (e *engine) unwind(fr **call_frame) bool {
+func (e *Engine) unwind(fr **call_frame) bool {
 	if len(e.catch_handlers) != 0 {
 		handler := slice_pop(&e.catch_handlers)
 		e.stack = e.stack[:handler.stack_len]
@@ -225,7 +225,7 @@ func (e *engine) unwind(fr **call_frame) bool {
 	return false
 }
 
-func (e *engine) uncaught(v Value) error {
+func (e *Engine) uncaught(v Value) error {
 	var err_builder strings.Builder
 	fmt.Fprintf(&err_builder, "uncaught: %s\n", v)
 	fmt.Fprintf(&err_builder, "\tstack trace:")
@@ -238,29 +238,7 @@ func (e *engine) uncaught(v Value) error {
 	return errors.New(err_builder.String())
 }
 
-func (e *engine) Interpret(src []byte) (Value, error) {
-	c := new_compiler(src)
-	def, err := c.compile()
-	if err != nil {
-		return nil, fmt.Errorf("compile error: %w", err)
-	}
-	if dbg_code {
-		log_dbg_def(def)
-	}
-	cls := &Closure{def: def}
-	if dbg_exe {
-		fmt.Println(cover("@execution", 30, '=') + "|")
-	}
-	e.push(cls)
-	cls.call(e, 0)
-	if v, err := e.execute(); err != nil {
-		return nil, fmt.Errorf("runtime error: %v", err)
-	} else {
-		return v, nil
-	}
-}
-
-func (e *engine) execute() (_ Value, err error) {
+func (e *Engine) execute() (_ Value, err error) {
 	defer catch(func(e fatal_error) { err = e })
 
 	e.status = coros_running
@@ -296,8 +274,8 @@ func (e *engine) execute() (_ Value, err error) {
 		case op_end_catch:
 			slice_pop(&e.catch_handlers)
 			v := e.pop()
-			r := new_structure(Nihil{})
-			r.store(key_result, v)
+			r := NewStructure(Nihil{})
+			r.Store(key_result, v)
 			e.push(r)
 		case op_throw:
 			goto unwind
@@ -353,18 +331,18 @@ func (e *engine) execute() (_ Value, err error) {
 			fr.closure.upvals[fr.read_var()].is_init = true
 		case op_structure:
 			v := e.pop()
-			if p, ok := v.(struct_proto); !ok {
+			if p, ok := v.(StructProto); !ok {
 				e.pushf("prototype is %s", v.TypeOf())
 				goto unwind
 
 			} else {
-				e.push(new_structure(p))
+				e.push(NewStructure(p))
 			}
 		case op_define_key:
 			v := e.pop()
 			k := e.pop()
 			s := e.peek1().(*Structure)
-			if err := s.store(k, v); err != nil {
+			if err := s.Store(k, v); err != nil {
 				e.push(err)
 				goto unwind
 			}
@@ -376,7 +354,7 @@ func (e *engine) execute() (_ Value, err error) {
 				e.pushf("attempt to spread %s", v.TypeOf())
 				goto unwind
 			}
-			s.merge(vs)
+			s.Merge(vs)
 		case op_store_key:
 			v := e.pop()
 			k := e.pop()
@@ -386,7 +364,7 @@ func (e *engine) execute() (_ Value, err error) {
 				e.pushf("attempt to store key to %s", to.TypeOf())
 				goto unwind
 			}
-			if err := s.store(k, v); err != nil {
+			if err := s.Store(k, v); err != nil {
 				e.push(err)
 				goto unwind
 			}
@@ -399,14 +377,15 @@ func (e *engine) execute() (_ Value, err error) {
 				e.pushf("attempt to load key from %s", to.TypeOf())
 				goto unwind
 			}
-			e.push(s.load(k))
+			e.push(s.Load(k))
 		case op_typeof:
 			e.push(e.pop().TypeOf())
 		case op_not:
 			e.push(!to_boolean(e.pop()))
 		case op_rev, op_neg, op_pos:
-			if v, ok := e.pop().(Number); ok {
-				e.push(un_num_ops[op-op_rev](v))
+			v := e.pop()
+			if n, ok := v.(Number); ok {
+				e.push(un_num_ops[op-op_rev](n))
 			} else {
 				e.pushf("attempt to %s %s", op_names[op], v.TypeOf())
 				goto unwind
@@ -458,7 +437,7 @@ func (e *engine) execute() (_ Value, err error) {
 			if spr, ok := e.pop().(*Structure); ok {
 				var i Number
 				for i = 0; ; i++ {
-					v := spr.load(i)
+					v := spr.Load(i)
 					if !is[Nihil](v) {
 						e.push(v)
 						argc++
@@ -499,8 +478,8 @@ func (e *engine) execute() (_ Value, err error) {
 		if !e.unwind(&fr) {
 			return nil, e.uncaught(v)
 		}
-		r := new_structure(Nihil{})
-		r.store(key_catched, v)
+		r := NewStructure(Nihil{})
+		r.Store(key_catched, v)
 		e.push(r)
 	}
 }
