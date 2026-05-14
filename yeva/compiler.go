@@ -687,6 +687,15 @@ func (c *compiler) parse_number() *emit_buf {
 	return nil
 }
 
+/* template literal
+ *
+ * if "%name" or "%(name + "!"->repeat(3))" =>
+ * create local template lexer =>
+ * parse one name or until ')'
+ *
+ * this means string literals can contain newlines
+ */
+
 func (c *compiler) parse_string() *emit_buf {
 	s := []rune(c.previous.literal[1 : len(c.previous.literal)-1])
 	r := strings.Builder{}
