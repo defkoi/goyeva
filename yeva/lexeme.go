@@ -12,6 +12,20 @@ const (
 	lx_lbrack lx_type = "["
 	lx_rbrack lx_type = "]"
 
+	/* lexical scopes
+	 *
+	 * { -> op_begin_scope
+	 * variable a -> op_define_name
+	 * a = 1 -> op_store_name
+	 * a -> op_load_name
+	 * } -> op_end_scope
+	 *
+	 * scope = map[name](value|value_cell)
+	 * value_cell = {is_mut?: boolean, is_init?: boolean, value: value}
+	 * mutable -> let | const
+	 * init -> temporal dead zone
+	 */
+
 	lx_langle       lx_type = "<"
 	lx_rangle       lx_type = ">"
 	lx_langle_equal lx_type = "<="
