@@ -176,6 +176,17 @@ const (
 	 * -- ??? --
 	 * use '::' for method call?
 	 * structure::->accessor(); ?
+	 *
+	 * upd: alternative
+	 * Structure = map[name](Value|Accessor)
+	 * Accessor = { get: () -> Value, set: (Value) -> void }
+	 * if type of Structure[name] == Accessor do call Accessor.(get or set)
+	 * else if == Value do default behavior
+	 * it's similar to JavaScript
+	 * use '<<' and '>>'?
+	 * { .value <<() => self._value, .value >>(value) => self._value = value }
+	 * { <<value() => self._value, >>value(value) => self._value = value }
+	 * { .value() << self._value, .value(value) >> self._value = value }
 	 */
 
 	/* alternative 'nokeyword' syntax
@@ -215,6 +226,14 @@ type lexeme struct {
 	line    int
 	literal string
 }
+
+/* lexemes
+ *
+ * lexeme = { type: lx_type, start: int, length: int, line: int }
+ * ref to source []byte
+ * compiler decides => copy or not
+ * lexer can precompute some values? { .., value: Value }
+ */
 
 func (l lexeme) String() string {
 	var lit string
