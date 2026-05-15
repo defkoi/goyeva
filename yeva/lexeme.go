@@ -150,6 +150,12 @@ const (
 	lx_struct   lx_type = "struct"
 	lx_destruct lx_type = "destruct"
 
+	/* try-catch-finally and async-await
+	 *
+	 * see: github.com/dop251/goja
+	 * see: github.com/robertkrimen/otto
+	 */
+
 	/* accessors
 	 *
 	 * structure data = map[Value](Accessor|Property)

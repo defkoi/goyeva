@@ -25,6 +25,21 @@ func Stringf(format string, a ...any) String {
 	return String(fmt.Sprintf(format, a...))
 }
 
+/* advanced prototypes
+ *
+ * similar to lua's metatables
+ * proto = { [".+"] = (self, other) => self.value + other.value, ... }
+ * overloads:
+ * -- nud: '+.', '-.', '~.', '!.'
+ * -- led: '.+', '.-', '.*', './', '.**', './/', '.|', '.^', '.&', '.<<', '.>>',
+ * -- -- '.<', '.<=', '.=='
+ * -- undefined key: load: '.[]', store: '.[]='
+ * -- call: '.()'
+ * -- iterator: 'in.' | 'of.'
+ * -- conversion: 'string'
+ * -- garbage collector: 'delete'
+ */
+
 type StructProto interface {
 	Value
 	Load(key Value) Value
