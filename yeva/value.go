@@ -123,6 +123,31 @@ type upval_info struct {
 	upval2   upval2_info
 }
 
+/* late binding -- similar to enclosing lexical scopes behavior concept
+ *
+ * upval2_info - behavior until late bind
+ * -- open: stack[index]
+ * -- name: global[name]
+ *
+ * late bind => 'op_init_upvalue' (index)
+ * if 'goto' undoes late bind => 'op_deinit_upvalue' (index)
+ *
+ * require:
+ * -- if AST => collect var info
+ * -- if single pass => late patching (hard)
+ *
+ * example:
+ * variable a = true;
+ * {
+ *   function b() => print(a); // create late open upvalue
+ *   // if 'a' is global => create late name upvalue
+ *   back: b(); // true
+ *   a = false; // init upvalue
+ *   b(); // false
+ *   if (first_time) goto back; // deinit upvalue
+ * }
+ */
+
 type upval2_info any
 
 type upval2_open_info struct {
