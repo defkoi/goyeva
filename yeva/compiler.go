@@ -8,6 +8,25 @@ import (
 	"strings"
 )
 
+/* engine components
+ *
+ * tree-walk:
+ * -- Lexer (Lexeme) ->
+ * -- Parser (Abstract Syntax Tree) ->
+ * -- Evaluator
+ *
+ * classic:
+ * -- Lexer (Lexeme) ->
+ * -- Parser (Abstract Syntax Tree) ->
+ * -- Emitter (Bytecode) ->
+ * -- Interpreter
+ *
+ * fast:
+ * -- Lexer (Lexeme) ->
+ * -- Emitter (Bytecode) ->
+ * -- Interpreter
+ */
+
 type compiler struct {
 	*parser
 	enclosing *compiler
